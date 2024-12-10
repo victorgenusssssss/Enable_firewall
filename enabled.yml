@@ -23,12 +23,13 @@
         name: ufw
         enabled: true
 
-    - name: Check UFW Status
+    - name: Check UFW Service Status
       ansible.builtin.command:
-        cmd: ufw status verbose
-      register: ufw_status
+        cmd: systemctl status ufw
+      register: ufw_service_status
       changed_when: false
+      failed_when: "'inactive (dead)' not in ufw_service_status.stdout"
 
-    - name: Debug - Show UFW Status
+    - name: Debug - Show UFW Service Status
       ansible.builtin.debug:
-        msg: "{{ ufw_status.stdout }}"
+        msg: "{{ ufw_service_status.stdout }}"
